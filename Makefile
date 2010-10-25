@@ -1,26 +1,37 @@
 DC=dmd
-CFLAGS=-c -odobjs
+CFLAGS=-c -Isrc 
 TARGET=dc
 BUILD_NUMBER_FILE=CompilerInfo.d
 
 all: $(TARGET)
 
-OBJS=CompilerInfo.o main.o
+OBJS=identifer.o stringbuffer.o token.o
 
-CompilerInfo:
+$(TARGET): $(OBJS) Makefile main.d
 	sh IncreBuildId.sh
+	$(DC) $(CFLAGS) compilerinfo.d
+	$(DC) $(CFLAGS) main.d
+	$(DC) *.o -ofdc
 
-$(TARGET): CompilerInfo $(OBJS) Makefile
-	$(DC) `find objs -name \*.o` -ofdc
+run: $(TARGET)
+	./dc
 
 count:
-	wc -l `find -name "*.h" -or -name "*.cpp" -o -path ./tinyxml -prune -o -path ./glm -prune`
+	wc -l `find -name "*.d"`
 
 clean:
 	rm -f objs/*.o $(TARGET)
+	rm -f *.o $(TARGET)
 
-CompilerInfo.o: Makefile CompilerInfo.d 
-	$(DC) $(CFLAGS) CompilerInfo.d 
+identifer.o: Makefile src/lex/identifer.d
+	$(DC) $(CFLAGS) src/lex/identifer.d 
 
-main.o: Makefile main.d
-	$(DC) $(CFLAGS) main.d 
+compilerinfo.o: Makefile compilerinfo.d 
+	$(DC) $(CFLAGS) compilerInfo.d 
+
+stringbuffer.o: Makefile src/util/stringbuffer.d
+	$(DC) $(CFLAGS) src/util/stringbuffer.d 
+
+token.o: Makefile src/lex/token.d
+	$(DC) $(CFLAGS) src/lex/token.d 
+

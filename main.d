@@ -1,6 +1,6 @@
 import std.stdio;
-import CompilerInfo;
+import compilerinfo;
 
 void main() {
-	writefln("BuildID = %u", CompilerInfo.CompilerID);
+	writefln("BuildID = %u", compilerinfo.CompilerID);
 }
