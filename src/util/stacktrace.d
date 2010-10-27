@@ -15,6 +15,7 @@ scope final class StackTrace {
 	private ulong startTime;
 
 	private class Stats {
+		string funcName;
 		uint calls;
 		ulong time;
 	}
@@ -22,9 +23,10 @@ scope final class StackTrace {
 	private static Stats[string] allCalls;
 
 	public static void printStats() {
+		writeln("\nStats of all traced function:");
 		foreach(idx; allCalls.keys) {
 			Stats s = StackTrace.allCalls[idx];
-			writefln("%20s called: %6d  totaltime %10d", idx, s.calls, s.time);
+			writefln("function: %35s\tcalled: %6d\ttotaltime: %10d", s.funcName~"():"~idx, s.calls, s.time);
 		}
 	}
 
@@ -37,8 +39,8 @@ scope final class StackTrace {
 
 	~this() {
 		ulong timeDiff = getUTCtime() - this.startTime;
-		writeln("destructor ", timeDiff);
-		string id = this.file ~ to!string(this.line);
+		//writeln("destructor ", timeDiff);
+		string id = this.file ~ ":" ~ to!string(this.line);
 		if(id in StackTrace.allCalls) {
 			Stats s = StackTrace.allCalls[id];
 			s.calls++;
@@ -47,14 +49,13 @@ scope final class StackTrace {
 			Stats s = new Stats;
 			StackTrace.allCalls[id] = s;
 			s.calls++;
-			s.time += timeDiff;	
-
+			s.time = timeDiff;	
+			s.funcName = this.funcName;
 		}
 	}
 }
 
 void main() {
-	//scope StackTrace st = new StackTrace(__FILE__, __LINE__, "main");
 	writeln("before foo");
 	foo();
 	writeln("after foo");
@@ -68,7 +69,18 @@ void foo() {
 	for(int j = 0; j < 100; j++) {
 		for(int i = 0; i < a; i++) {
 			cnt += i/1000;
-		}	
+		}
+		(j % 10 == 0) && bar(j);
 	}
 	writeln("foobar", cnt);
 }
+
+ulong bar(int h) {
+	scope StackTrace st = new StackTrace(__FILE__, __LINE__, "bar");
+	ulong ret = 0;
+	for(int j = 0; j < 5000; j++) {
+		ret += cast(int)(j * 1.2)/cast(double)h;
+	}
+	return ret;
+}
+	
