@@ -103,7 +103,13 @@ public class DLinkedList(T) {
 		}	
 	}
 
-	public int opApplay(int delegate(ref T) dg) {
+	public int opApply(scope int delegate(ref T) dg) {
+		for(Elem!(T) e = this.head; e; e = e.getNext()) {
+			T s = e.getStore();
+			if(int r = dg(s)) {
+				return r;
+			}
+		}
 		return 0;
 	}
 				

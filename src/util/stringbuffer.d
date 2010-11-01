@@ -16,11 +16,13 @@ public template StringBuffer(T) {
 		private uint initSize;
 		private int bufferPointer;
 		private bool holdsNumber;
+		private bool firstCharIsNumber;
 
 		public this(in uint initSize) {
 			this.initSize = initSize;
 			this.bufferPointer = 0;
 			this.holdsNumber = false;
+			this.firstCharIsNumber = false;
 			this.buffer = new T[this.initSize];
 		}
 
@@ -41,6 +43,10 @@ public template StringBuffer(T) {
 			return this.holdsNumber;
 		}
 
+		public bool firstIsNumber() {
+			return this.frstCharIsNumber;
+		}
+
 		public void pushBack(in T toAdd) {
 			if(this.bufferPointer == initSize) {
 				this.buffer.length = initSize * 2u;
@@ -51,8 +57,10 @@ public template StringBuffer(T) {
 
 		public void pushBackNum(in T toAdd) {
 			this.holdsNumber = true;
-			if(this.bufferPointer == initSize) {
-				this.buffer.length = initSize * 2u;
+			if(this.bufferPointer == 0)
+				this.firstCharIsNumber = true;
+			if(this.bufferPointer == this.initSize) {
+				this.buffer.length = this.initSize * 2u;
 				this.initSize *= 2u;
 			}
 			this.buffer[this.bufferPointer++] = toAdd;

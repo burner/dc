@@ -37,7 +37,10 @@ public final class StackTrace {
 	}
 
 	public static void printTrace() {
-
+		writeln("\nPrinting current stackTrace:");
+		foreach(StackTrace it; StackTrace.stack) {
+			it.print();
+		}
 	}
 
 	static this() {
@@ -50,6 +53,7 @@ public final class StackTrace {
 		this.funcName = funcName;
 		this.startTime = getUTCtime();
 		this.localDepth = StackTrace.depth++;
+		StackTrace.stack.pushBack(this);
 	}
 
 	public void print() {
@@ -100,5 +104,6 @@ public final class StackTrace {
 			s.funcName = this.funcName;
 		}
 		StackTrace.depth--;
+		StackTrace.stack.popBack();
 	}
 }
