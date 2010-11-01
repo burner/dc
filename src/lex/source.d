@@ -41,4 +41,8 @@ public class Source {
 	private void openFile() {
 
 	}
+
+	public string getFileName() const {
+		return this.fileName;
+	}
 }

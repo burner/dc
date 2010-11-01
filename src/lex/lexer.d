@@ -1,5 +1,7 @@
 module lex.lexer;
 
+import std.stdio;
+
 import lex.source;
 import util.stringbuffer;
 
@@ -29,9 +31,9 @@ public class Lexer {
 				switch(it) {
 					//character
 					case 'A': .. case 'Z': case 'a': .. case 'z':
-						if(sb.firstIsNumber())
-							this.raiseLexError(idx, it, curLine, this.source,
-							CHAR_AFTER_BEGIN_NUMBER);
+						if(sb.firstIsNumber()) {
+							this.raiseLexError(idx, it, curLine,
+							this.sourceFile, Error.CHAR_AFTER_BEGIN_NUMBER);
 						} else {
 							sb.pushBack(it);
 						}
@@ -43,7 +45,7 @@ public class Lexer {
 						}
 						break;
 					//the underscore can be used in identifer as well as number
-					case "_":
+					case '_':
 						sb.pushBack(it);
 						break;
 					//puction
@@ -51,7 +53,7 @@ public class Lexer {
 						pop = true;
 						break;
 					//operater
-					case '^', '!', '$', '%', '&' '/', '=', '?', '*', '+', '~':
+					case '^', '!', '$', '%', '&', '/', '=', '?', '*', '+', '~',
 						'-', '<', '>':
 						pop = true;
 						break;
@@ -180,16 +182,14 @@ public class Lexer {
 		}	
 	}
 
-	private pure void raiseLexError(uint idx, char it, string curLine,
+	private void raiseLexError(uint idx, char it, string curLine,
 			Source source, Error errCode) {
 		final switch(errCode) {
-			case CHAR_AFTER_BEGIN_NUMBER:
+			case Error.CHAR_AFTER_BEGIN_NUMBER:
 				writefln("lex error at: %20s%d position %d: can't place char in 
 					identifer which started with a number", 
-					source.getFileName(), source.getCurrentLine(), idx);
+					source.getFileName(), source.currentLineNumber(), idx);
 				return;
 		}
-	}
-
 	}
 }

@@ -44,7 +44,7 @@ public template StringBuffer(T) {
 		}
 
 		public bool firstIsNumber() {
-			return this.frstCharIsNumber;
+			return this.firstCharIsNumber;
 		}
 
 		public void pushBack(in T toAdd) {

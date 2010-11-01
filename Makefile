@@ -5,7 +5,7 @@ BUILD_NUMBER_FILE=CompilerInfo.d
 
 all: $(TARGET)
 
-OBJS=dlist.o identifer.o lexer.o stringbuffer.o token.o stacktrace.o source.o 
+OBJS=dlist.o identifer.o lexer.o stringbuffer.o token.o stacktrace.o source.o token.o
 
 $(TARGET): $(OBJS) Makefile src/main.d
 	sh IncreBuildId.sh
@@ -17,7 +17,7 @@ run: $(TARGET)
 	./dc
 
 count:
-	wc -l `find -name "*.d"`
+	wc -l `find src -name "*.d"`
 
 clean:
 	rm -f objs/*.o $(TARGET)

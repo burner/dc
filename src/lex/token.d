@@ -1,4 +1,4 @@
-module les.token;
+module lex.token;
 
 public abstract class Token {
 	private Token prevToken;
