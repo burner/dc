@@ -1,18 +1,22 @@
-module stacktrace;
+module util.stacktrace;
 
 import std.stdio;
 import std.date;
 import std.conv;
+import std.stdarg;
+import container.dlst;
 
 public interface Printable {
 	public string toString();
 }
 
-scope final class StackTrace {
+public final class StackTrace {
 	private string file;
 	private uint line;
 	private string funcName;
 	private ulong startTime;
+	private string args;
+	private uint localDepth;
 
 	private class Stats {
 		string funcName;
@@ -21,6 +25,8 @@ scope final class StackTrace {
 	}
 
 	private static Stats[string] allCalls;
+	private static uint depth;
+	private static DLinkedList!(StackTrace) stack;
 
 	public static void printStats() {
 		writeln("\nStats of all traced function:");
@@ -30,11 +36,52 @@ scope final class StackTrace {
 		}
 	}
 
+	public static void printTrace() {
+
+	}
+
+	static this() {
+		StackTrace.stack = new DLinkedList!(StackTrace)();
+	}
+
 	this(string file, uint line, string funcName) {
 		this.file = file;
 		this.line = line;
 		this.funcName = funcName;
 		this.startTime = getUTCtime();
+		this.localDepth = StackTrace.depth++;
+	}
+
+	public void print() {
+		for(uint i = 0; i < this.localDepth; i++) {
+			write("\t");
+		}
+		writefln("%s:%d %s(%s)", this.file, this.line, this.funcName, this.args);
+	}
+
+	public void putArgs(...) {
+		string tmp = "";
+		int cnt = 0;
+		for(int i = 0; i < _arguments.length; i++) {
+			//writeln("typeid = ",_arguments[i]);
+			if(_arguments[i] == typeid(string)) {
+				tmp ~= va_arg!(string)(_argptr);
+				tmp ~= " ";
+			} else if(_arguments[i] == typeid(Printable)) {
+				tmp ~= va_arg!(Printable)(_argptr).toString();
+				tmp ~= " ";
+			} else if(_arguments[i] == typeid(int)) {
+				tmp ~= to!(string)(va_arg!(int)(_argptr));
+				tmp ~= " ";
+			} else if(_arguments[i] == typeid(double)) {
+				tmp ~= to!(string)(va_arg!(double)(_argptr));
+				tmp ~= " ";
+			} else {
+				writefln("%s:%d Unkown type %s", __FILE__, __LINE__, typeid(_arguments[i]));
+			}
+		}
+		//writeln(tmp);
+		this.args = tmp[0 .. $-1];
 	}
 
 	~this() {
@@ -52,35 +99,6 @@ scope final class StackTrace {
 			s.time = timeDiff;	
 			s.funcName = this.funcName;
 		}
+		StackTrace.depth--;
 	}
 }
-
-void main() {
-	writeln("before foo");
-	foo();
-	writeln("after foo");
-	StackTrace.printStats();
-}
-
-void foo() {
-	scope StackTrace st = new StackTrace(__FILE__, __LINE__, "foo");
-	int a = 123427;
-	ulong cnt = 0;
-	for(int j = 0; j < 100; j++) {
-		for(int i = 0; i < a; i++) {
-			cnt += i/1000;
-		}
-		(j % 10 == 0) && bar(j);
-	}
-	writeln("foobar", cnt);
-}
-
-ulong bar(int h) {
-	scope StackTrace st = new StackTrace(__FILE__, __LINE__, "bar");
-	ulong ret = 0;
-	for(int j = 0; j < 5000; j++) {
-		ret += cast(int)(j * 1.2)/cast(double)h;
-	}
-	return ret;
-}
-	

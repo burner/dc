@@ -1,16 +1,16 @@
 DC=dmd
-CFLAGS=-c -Isrc 
+CFLAGS=-c -Isrc
 TARGET=dc
 BUILD_NUMBER_FILE=CompilerInfo.d
 
 all: $(TARGET)
 
-OBJS=identifer.o stringbuffer.o token.o
+OBJS=identifer.o stringbuffer.o token.o stacktrace.o dlist.o source.o
 
-$(TARGET): $(OBJS) Makefile main.d
+$(TARGET): $(OBJS) Makefile src/main.d
 	sh IncreBuildId.sh
 	$(DC) $(CFLAGS) compilerinfo.d
-	$(DC) $(CFLAGS) main.d
+	$(DC) $(CFLAGS) src/main.d
 	$(DC) *.o -ofdc
 
 run: $(TARGET)
@@ -27,7 +27,16 @@ identifer.o: Makefile src/lex/identifer.d
 	$(DC) $(CFLAGS) src/lex/identifer.d 
 
 compilerinfo.o: Makefile compilerinfo.d 
-	$(DC) $(CFLAGS) compilerInfo.d 
+	$(DC) $(CFLAGS) compilerinfo.d 
+
+dlist.o: Makefile src/container/dlst.d 
+	$(DC) $(CFLAGS) src/container/dlst.d 
+
+source.o: Makefile src/lex/source.d
+	$(DC) $(CFLAGS) src/lex/source.d 
+
+stacktrace.o: Makefile src/util/stacktrace.d
+	$(DC) $(CFLAGS) src/util/stacktrace.d 
 
 stringbuffer.o: Makefile src/util/stringbuffer.d
 	$(DC) $(CFLAGS) src/util/stringbuffer.d 
