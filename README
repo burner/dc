@@ -1,0 +1,10 @@
+dc
+
+dc aims to be a multithread D2 compiler written in D2.
+
+First goal is to write a Lexer for D2, which creates class instances for all 
+Token. Next thing to do, is to send the token to a parser threads which checks
+whether the list of token form valid statements. No more steps are planed yet.
+
+Every of the six compiler steps will be divided in corresponding directories 
+and files.
