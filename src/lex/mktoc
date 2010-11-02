@@ -1,197 +1,197 @@
-BOF
-Invalid
-Illegal
-Comment
-Shebang
-HashLine
-Filespec
-Newline
-Empty
-Identifier
-String
+Abstract		//done
+Alias			//done
+Align			//done
+AndAssign		//done
+AndBinary		//done
+AndLogical		//done
+Asm				//done
+Assert			//done
+Assign			//done	
+At				//done
+Auto			//done
+BOF				//not done
+Body			//done
+Bool
+Break			//done
+Byte
+Case			//done
+Cast			//done
+CatAssign
+Catch			//done
+Cdouble
+Cent
+Cfloat
+Char
 CharLiteral
-FILE
-LINE
-DATE
-TIME
-TIMESTAMP
-VENDOR
-VERSION
-Int32
-Int64
-Uint32
-Uint64
+Class			//done
+Colon
+Comma			//done
+Comment			//not done
+Const			//done
+Continue		//done
+Creal
+DATE			//not done
+Dchar
+Debug			//done
+Default			//done
+Delegate		//done
+Delete			//done
+Deprecated		//not done
+Div				//done
+DivAssign		//done
+Do				//done
+Dollar			//done
+Dot				//done
+Double
+EOF				//done
+Ellipses	
+Else			//done
+Empty			
+Enum			//done
+Equal			//done
+Export			//not done
+Extern			//done
+FILE			//done
+False			//done
+Filespec
+Final			//done
+Finally			//done
+Float
 Float32
 Float64
 Float80
+For				//done
+Foreach			//done
+ForeachReverse	//done
+Function		//done
+Goto			//done
+Greater			//done
+GreaterEqual	//done
+Gshared
+HashLine
+Identifier		//done
+Idouble
+If
+Ifloat
+Illegal
 Imaginary32
 Imaginary64
 Imaginary80
-LParen
-RParen
-LBracket
-RBracket
-LBrace
-RBrace
-Dot
-Slice
-Ellipses
-Unordered
-UorE
-UorG
-UorGorE
-UorL
-UorLorE
-LorEorG
-LorG
-Assign
-Equal
-NotEqual
-Not
-LessEqual
-Less
-GreaterEqual
-Greater
-LShiftAssign
-LShift
-RShiftAssign
-RShift
-URShiftAssign
-URShift
-OrAssign
-OrLogical
-OrBinary
-AndAssign
-AndLogical
-AndBinary
-PlusAssign
-PlusPlus
-Plus
-MinusAssign
-MinusMinus
-Minus
-DivAssign
-Div
-MulAssign
-Mul
-ModAssign
-Mod
-XorAssign
-Xor
-PowAssign
-Pow
-CatAssign
-Tilde
-Colon
-Semicolon
-Question
-Comma
-Dollar
-At
-Abstract
-Alias
-Align
-Asm
-Assert
-Auto
-Body
-Break
-Case
-Cast
-Catch
-Class
-Const
-Continue
-Debug
-Default
-Delegate
-Delete
-Deprecated
-Do
-Else
-Enum
-Export
-Extern
-False
-Final
-Finally
-For
-Foreach
-ForeachReverse
-Function
-Goto
-Gshared
-If
 Immutable
 Import
 In
 Inout
+Int
+Int32
+Int64
 Interface
+Invalid
 Invariant
+Ireal
 Is
+LBrace			//done
+LBracket		//done
+LINE			//done
+LParen			//done
+LShift
+LShiftAssign
 Lazy
+Less			//done
+LessEqual		//done	
+Long
+LorEorG
+LorG
 Macro
+Minus
+MinusAssign
+MinusMinus
 Mixin
+Mod
+ModAssign
 Module
+Mul
+MulAssign
 New
+Newline
+Not				//done
+NotEqual		//done
 Nothrow
 Null
+OrAssign
+OrBinary
+OrLogical
 Out
 OverloadSet
 Override
 Package
+Plus
+PlusAssign
+PlusPlus
+Pow
+PowAssign
 Pragma
 Private
 Protected
 Public
 Pure
+Question
+RBrace			//done
+RBracket		//done
+RParen			//done
+RShift
+RShiftAssign
+Real
 Ref
 Return
-Shared
 Scope
+Semicolon
+Shared
+Shebang
+Short
+Slice			//done
 Static
+String
 Struct
 Super
 Switch
 Synchronized
+TIME			//not done
+TIMESTAMP
 Template
 This
 Thread
 Throw
+Tilde
 Traits
 True
 Try
 Typedef
 Typeid
 Typeof
+URShift
+URShiftAssign
+Ubyte
+Ucent
+Uint
+Uint32
+Uint64
+Ulong
 Union
 Unittest
+Unordered
+UorE
+UorG
+UorGorE
+UorL
+UorLorE
+Ushort
+VENDOR			//done
+VERSION			//done
 Version
+Void
 Volatile
+Wchar
 While
 With
-Char
-Wchar
-Dchar
-Bool
-Byte
-Ubyte
-Short
-Ushort
-Int
-Uint
-Long
-Ulong
-Cent
-Ucent
-Float
-Double
-Real
-Ifloat
-Idouble
-Ireal
-Cfloat
-Cdouble
-Creal
-Void
-EOF
+Xor
+XorAssign

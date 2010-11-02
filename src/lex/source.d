@@ -1,18 +1,30 @@
 module lex.source;
 
-public class Source {
+import util.stacktrace;
+
+public class Source : Printable {
 	private string fileName;
 	private string[] file;
 	private uint curLine;
 	private bool open;
 
 	public this(string fileName, bool open = false) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"this");
+		debug st.putArgs("string", "fileName", fileName, 
+			"bool", "open", open);
+
 		this.fileName = fileName;
 		this.file = null;
 		this.curLine = 0;
 	}
 
 	public this(string fileName, string[] file) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"this");
+		debug st.putArgs("string", "fileName", fileName, 
+			"string", "file", "stringArray");
+
 		this.fileName = fileName;
 		this.file = file;
 		this.curLine = 0;
@@ -39,10 +51,16 @@ public class Source {
 	}
 
 	private void openFile() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"openFile");
 
 	}
 
 	public string getFileName() const {
+		return this.fileName;
+	}
+
+	public string toString() const {
 		return this.fileName;
 	}
 }

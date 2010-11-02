@@ -1,5 +1,7 @@
 module util.stringbuffer;
 import std.stdio;
+
+import util.stacktrace;
 /** 
  *  Authors: Robert "BuRnEr" Schadek, rburners.gmail.com
  *  Data: 25.10.2010
@@ -19,6 +21,10 @@ public template StringBuffer(T) {
 		private bool firstCharIsNumber;
 
 		public this(in uint initSize) {
+			debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+				"this");
+			debug st.putArgs("uint", "initSize", initSize);
+				
 			this.initSize = initSize;
 			this.bufferPointer = 0;
 			this.holdsNumber = false;

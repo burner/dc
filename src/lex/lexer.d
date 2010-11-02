@@ -4,19 +4,32 @@ import std.stdio;
 
 import lex.source;
 import util.stringbuffer;
+import util.stacktrace;
 
 private enum Error {
 	CHAR_AFTER_BEGIN_NUMBER,
+}
+
+private string errorToString(Error error) {
+	switch(error) {
+		case Error.CHAR_AFTER_BEGIN_NUMBER:
+			return "CHAR_AFTER_BEGIN_NUMBER";
+	}
 }
 
 public class Lexer {
 	private Source sourceFile;
 
 	this(Source sourceFile) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, "Lexer.this");
+		st.putArgs("string", "sourceFile", sourceFile.toString());
+
 		this.sourceFile = sourceFile;
 	}
 
 	public void lex() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, "lex");
+
 		StringBuffer!(char) sb = new StringBuffer!(char)(16);
 		string curLine;
 		//pop = punction operator parenthess
@@ -184,6 +197,12 @@ public class Lexer {
 
 	private void raiseLexError(uint idx, char it, string curLine,
 			Source source, Error errCode) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"raiseLexError");
+		debug st.putArgs("uint", "idx", idx, "char", "it", it, "string",
+			"curLine", curLine, "string", "source", source.toString(), "string",
+			"errCode", errorToString(errCode));
+			
 		final switch(errCode) {
 			case Error.CHAR_AFTER_BEGIN_NUMBER:
 				writefln("lex error at: %20s%d position %d: can't place char in 
