@@ -68,17 +68,14 @@ public class Lexer {
 						sb.pushBack(it);
 						break;
 					//puction
-					case ',', ';', '.', ':':
+					case '[', ']', '(', ')', '{', '}', ',', ';', ':', '!', '?',
+						 '$':
 						splitter = Lexer.puncToToken(it);
 						pop = true;
 						break;
 					//operater
-					case '^', '!', '$', '%', '&', '/', '=', '?', '*', '+', '~',
+					case '^', '%', '&', '/', '=', '*', '+', '~',
 						'-', '<', '>':
-						pop = true;
-						break;
-					//parenthess
-					case '(', ')', '{', '}', '"':
 						pop = true;
 						break;
 				}
@@ -94,14 +91,26 @@ public class Lexer {
 
 	private static Token puncToToken(char punc) {
 		switch(punc) {
-			case ',':
-				return new Token(TokenType.Comma);
+			case '[':
+				return new Token(TokenType.OpenBracket);
+			case ']':
+				return new Token(TokenType.CloseBracket);
+			case '{':
+				return new Token(TokenType.OpenBrace);
+			case '}':
+				return new Token(TokenType.CloseBrace);
+			case '(':
+				return new Token(TokenType.OpenParen);
+			case ')':
+				return new Token(TokenType.CloseParen);
 			case ';':
 				return new Token(TokenType.Semicolon);
-			case '.':
-				return new Token(TokenType.Dot);
 			case ':':
 				return new Token(TokenType.Colon);
+			case '?':
+				return new Token(TokenType.QuestionMark);
+			case '$':
+				return new Token(TokenType.Dollar);
 			default:
 				assert(0, "Invalid case : " ~ punc);	
 		}
