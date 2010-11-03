@@ -5,11 +5,12 @@ BUILD_NUMBER_FILE=CompilerInfo.d
 
 all: $(TARGET)
 
-OBJS=dlst.o identifer.o lexer.o main.o stringbuffer.o token.o stacktrace.o source.o token.o tokensymbols.o
+OBJS=dlst.o lexer.o stringbuffer.o token.o stacktrace.o source.o token.o
 
 $(TARGET): $(OBJS) Makefile
 	sh IncreBuildId.sh
 	$(DC) $(CFLAGS) compilerinfo.d
+	$(DC) $(CFLAGS) src/main.d
 	$(DC) *.o -ofdc
 
 run: $(TARGET)
@@ -21,9 +22,6 @@ count:
 clean:
 	rm -f objs/*.o $(TARGET)
 	rm -f *.o $(TARGET)
-
-identifer.o: Makefile src/lex/identifer.d
-	$(DC) $(CFLAGS) src/lex/identifer.d 
 
 dlst.o: Makefile src/container/dlst.d 
 	$(DC) $(CFLAGS) src/container/dlst.d 
@@ -45,7 +43,3 @@ stringbuffer.o: Makefile src/util/stringbuffer.d
 
 token.o: Makefile src/lex/token.d
 	$(DC) $(CFLAGS) src/lex/token.d 
-
-tokensymbols.o: Makefile src/lex/tokensymbols.d
-	$(DC) $(CFLAGS) src/lex/tokensymbols.d 
-
