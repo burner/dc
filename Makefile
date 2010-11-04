@@ -5,9 +5,9 @@ BUILD_NUMBER_FILE=CompilerInfo.d
 
 all: $(TARGET)
 
-OBJS=dlst.o lexer.o stringbuffer.o token.o stacktrace.o source.o token.o
+OBJS=dlst.o lexer.o parser.o stringbuffer.o token.o stacktrace.o source.o token.o
 
-$(TARGET): $(OBJS) Makefile
+$(TARGET): $(OBJS) Makefile src/main.d
 	sh IncreBuildId.sh
 	$(DC) $(CFLAGS) compilerinfo.d
 	$(DC) $(CFLAGS) src/main.d
@@ -29,8 +29,8 @@ dlst.o: Makefile src/container/dlst.d
 lexer.o: Makefile src/lex/lexer.d
 	$(DC) $(CFLAGS) src/lex/lexer.d 
 
-main.o: Makefile src/main.d
-	$(DC) $(CFLAGS) src/main.d 
+parser.o: Makefile src/pars/parser.d
+	$(DC) $(CFLAGS) src/pars/parser.d 
 
 source.o: Makefile src/lex/source.d
 	$(DC) $(CFLAGS) src/lex/source.d 

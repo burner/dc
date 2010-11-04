@@ -5,7 +5,7 @@ if ! test -f compilerinfo.d; then
 	echo -e "module compilerinfo;
 
 public static immutable(uint) CompilerID = 0;
-public static immutable(dstring) GitHas = \"$HASH\";" > compilerinfo.d; 
+public static immutable(dstring) GitHash = \"$HASH\";" > compilerinfo.d; 
 else
 	TMP=`grep "CompilerID" compilerinfo.d | cut -b 44- | sed 's/\(.*\)./\1/'` 
 	TMP=$(($TMP + 1))
@@ -13,5 +13,5 @@ else
 	echo -e "module compilerinfo;
 
 public static immutable(uint) CompilerID = $TMP;
-public static immutable(dstring) GitHas = \"$HASH\";" > compilerinfo.d; 
+public static immutable(dstring) GitHash = \"$HASH\";" > compilerinfo.d; 
 fi
