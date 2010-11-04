@@ -30,13 +30,13 @@ public class Parser : Thread {
 		DLinkedList!(Token) currentStat;
 		while(true) {
 			this.noJobQueue.wait();
-			
-			writeln("Parser Run");
+			currentStat = this.syncPop();
+			writeln("Parser Run", currentStat.popFront.getType());
 			if(this.stopVar && this.buffer.getSize() == 0) return;
 		}
 	}
 
-	private void syncPush(DLinkedList!(Token) toPush) {
+	public void syncPush(DLinkedList!(Token) toPush) {
 		this.listModMutex.lock();
 		this.buffer.pushBack(toPush);
 		this.listModMutex.unlock();

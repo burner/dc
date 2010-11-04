@@ -4,6 +4,8 @@ import core.thread;
 import std.stdio;
 
 import compilerinfo;
+import container.dlst;
+import lex.token;
 import pars.parser;
 import util.stacktrace;
 
@@ -14,7 +16,11 @@ void main() {
 
 	Parser p = new Parser();
 	p.start();
-	p.increCount();
+
+	auto ll = new DLinkedList!(Token)();
+	ll.pushBack(new Token(TokenType.Abstract));
+	p.syncPush(ll);
+
 	Thread.sleep(100);
 	p.stop();
 }
