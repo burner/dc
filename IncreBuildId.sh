@@ -1,9 +1,17 @@
 #!/bin/sh
 
 if ! test -f compilerinfo.d; then 
-	echo -e "module compilerinfo;\n\npublic static immutable(uint) CompilerID = 0;\npublic static string gitHash = \"`git log -1 --pretty=format:%H`\"" > compilerinfo.d; 
+	HASH=`git log -1 --pretty=format:%H`
+	echo -e "module compilerinfo;
+
+public static immutable(uint) CompilerID = 0;
+public static immutable(dstring) GitHas = \"$HASH\";" > compilerinfo.d; 
 else
-	TMP=`grep "= *" compilerinfo.d | cut -b 44- | sed 's/\(.*\)./\1/'` 
-	TMP=$(($TMP +1))
-	echo -e "module compilerinfo;\n\npublic static immutable(uint) CompilerID = $TMP;\npublic static string gitHash = " `git log -1 --pretty=format:%H` > compilerinfo.d;
+	TMP=`grep "CompilerID" compilerinfo.d | cut -b 44- | sed 's/\(.*\)./\1/'` 
+	TMP=$(($TMP + 1))
+	HASH=`git log -1 --pretty=format:%H`
+	echo -e "module compilerinfo;
+
+public static immutable(uint) CompilerID = $TMP;
+public static immutable(dstring) GitHas = \"$HASH\";" > compilerinfo.d; 
 fi

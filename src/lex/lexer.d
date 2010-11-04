@@ -3,6 +3,7 @@ module lex.lexer;
 import std.stdio;
 
 import lex.source;
+import lex.token;
 import util.stringbuffer;
 import util.stacktrace;
 
@@ -36,8 +37,13 @@ public class Lexer {
 		bool pop = false;
 		while(this.sourceFile.nextLineExists()) {
 			curLine = this.sourceFile.getNextLine();
+			Token parsed;
+			Token splitter;
 			foreach(uint idx, char it; curLine) {
 				pop = false;
+				if(it == ' ' || it == '\t') {
+					continue;
+				}
 				//get the next char and put it into the StringBuffer.
 				//should a puction,operator or parenthess char follow check if
 				//stringbuffer contents equals an keyword. 
@@ -62,16 +68,14 @@ public class Lexer {
 						sb.pushBack(it);
 						break;
 					//puction
-					case ' ', '\t', ',', ';', '.', ':':
+					case '[', ']', '(', ')', '{', '}', ',', ';', ':', '!', '?',
+						 '$':
+						splitter = Lexer.puncToToken(it);
 						pop = true;
 						break;
 					//operater
-					case '^', '!', '$', '%', '&', '/', '=', '?', '*', '+', '~',
+					case '^', '%', '&', '/', '=', '*', '+', '~',
 						'-', '<', '>':
-						pop = true;
-						break;
-					//parenthess
-					case '(', ')', '{', '}', '"':
 						pop = true;
 						break;
 				}
@@ -80,119 +84,36 @@ public class Lexer {
 				//hildsNumberChar is checked because no keyword consists of
 				//numbers
 				if(pop && !sb.holdsNumberChar()) {
-					switch(sb.getString()) {
-						case "abstract":
-						case "alias":
-						case "align":
-						case "asm":
-						case "assert":
-						case "auto":
-						case "body":
-						case "break":
-						case "case":
-						case "cast":
-						case "catch":
-						case "class":
-						case "const":
-						case "continue":
-						case "debug":
-						case "default":
-						case "delegate":
-						case "delete":
-						case "deprecated":
-						case "do":
-						case "else":
-						case "enum":
-						case "export":
-						case "extern":
-						case "false":
-						case "final":
-						case "finally":
-						case "for":
-						case "foreach":
-						case "foreach_reverse":
-						case "function":
-						case "goto":
-						case "__gshared":
-						case "if":
-						case "immutable":
-						case "import":
-						case "in":
-						case "inout":
-						case "interface":
-						case "invariant":
-						case "is":
-						case "lazy":
-						case "macro":
-						case "mixin":
-						case "module":
-						case "new":
-						case "nothrow":
-						case "null":
-						case "out":
-						case "__overloadset":
-						case "override":
-						case "package":
-						case "pragma":
-						case "private":
-						case "protected":
-						case "public":
-						case "pure":
-						case "ref":
-						case "return":
-						case "shared":
-						case "scope":
-						case "static":
-						case "struct":
-						case "super":
-						case "switch":
-						case "synchronized":
-						case "template":
-						case "this":
-						case "__thread":
-						case "throw":
-						case "__traits":
-						case "true":
-						case "try":
-						case "typedef":
-						case "typeid":
-						case "typeof":
-						case "union":
-						case "unittest":
-						case "version":
-						case "volatile":
-						case "while":
-						case "with":
-						case "char":
-						case "wchar":
-						case "dchar":
-						case "bool":
-						case "byte":
-						case "ubyte":
-						case "short":
-						case "ushort":
-						case "int":
-						case "uint":
-						case "long":
-						case "ulong":
-						case "cent":
-						case "ucent":
-						case "float":
-						case "double":
-						case "real":
-						case "ifloat":
-						case "idouble":
-						case "ireal":
-						case "cfloat":
-						case "cdouble":
-						case "creal":
-						case "void":
-						case "HEAD":
-						case "EOF":
-					}
 				}
 			}	
 		}	
+	}
+
+	private static Token puncToToken(char punc) {
+		switch(punc) {
+			case '[':
+				return new Token(TokenType.OpenBracket);
+			case ']':
+				return new Token(TokenType.CloseBracket);
+			case '{':
+				return new Token(TokenType.OpenBrace);
+			case '}':
+				return new Token(TokenType.CloseBrace);
+			case '(':
+				return new Token(TokenType.OpenParen);
+			case ')':
+				return new Token(TokenType.CloseParen);
+			case ';':
+				return new Token(TokenType.Semicolon);
+			case ':':
+				return new Token(TokenType.Colon);
+			case '?':
+				return new Token(TokenType.QuestionMark);
+			case '$':
+				return new Token(TokenType.Dollar);
+			default:
+				assert(0, "Invalid case : " ~ punc);	
+		}
 	}
 
 	private void raiseLexError(uint idx, char it, string curLine,
