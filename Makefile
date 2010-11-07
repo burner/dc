@@ -1,5 +1,5 @@
 DC=dmd
-CFLAGS=-c -Isrc -debug
+CFLAGS=-c -Isrc -debug -g
 TARGET=dc
 BUILD_NUMBER_FILE=CompilerInfo.d
 

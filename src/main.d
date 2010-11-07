@@ -13,8 +13,8 @@ import util.stacktrace;
 
 void main() {
 	debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, "main");
-	writefln("BuildID = %u", compilerinfo.CompilerID);
-	writefln("Git version = %s", compilerinfo.GitHash);
+	//writefln("BuildID = %u", compilerinfo.CompilerID);
+	//writefln("Git version = %s", compilerinfo.GitHash);
 	
 	string[] ts = [ "int main(string[] args) {",
 		"\t\tint  foo = 44;",

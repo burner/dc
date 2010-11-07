@@ -34,7 +34,6 @@ public class Parser : Thread {
 		while(true) {
 			this.noJobQueue.wait();
 			currentStat = this.syncPop();
-			writeln("Parser Run ", currentStat.popFront.getType());
 			int idx = 0;
 			Token next = currentStat.popFront();
 			while(!(next is null)) {
@@ -49,6 +48,7 @@ public class Parser : Thread {
 
 	public void syncPush(Token toPush) {
 		this.listModMutex.lock();
+		debug writeln("pushed new Token ", toPush.getType());
 		this.buffer.pushBack(toPush);
 		
 		if(toPush.getType() == TokenType.Semicolon) {
