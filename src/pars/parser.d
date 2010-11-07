@@ -14,14 +14,17 @@ public class Parser : Thread {
 
 	private DLinkedList!(Token) workingSet;
 	private bool stopVar;
-	private DLinkedList!(DLinkedList!(Token)) buffer;
+	private DLinkedList!(Token) buffer;
+	private DLinkedList!(DLinkedList!(Token)) bufferList;
 
 	public this() {
 		super(&run);
 		this.stopVar = false;
 		this.listModMutex = new Mutex();
 		this.noJobQueue = new Semaphore();
-		this.buffer = new DLinkedList!(DLinkedList!(Token));
+		this.buffer = new DLinkedList!(Token);
+		this.bufferList = new DLinkedList!(DLinkedList!(Token));
+		this.bufferList.pushBack(this.buffer);
 	}
 
 	public void run() {
@@ -31,23 +34,41 @@ public class Parser : Thread {
 		while(true) {
 			this.noJobQueue.wait();
 			currentStat = this.syncPop();
-			writeln("Parser Run", currentStat.popFront.getType());
+			writeln("Parser Run ", currentStat.popFront.getType());
+			int idx = 0;
+			Token next = currentStat.popFront();
+			while(!(next is null)) {
+				idx++;
+				write(next.getType(), " ");
+				next = currentStat.popFront();
+			}
+			writeln(idx);
 			if(this.stopVar && this.buffer.getSize() == 0) return;
 		}
 	}
 
-	public void syncPush(DLinkedList!(Token) toPush) {
+	public void syncPush(Token toPush) {
 		this.listModMutex.lock();
 		this.buffer.pushBack(toPush);
+		
+		if(toPush.getType() == TokenType.Semicolon) {
+			this.buffer = new DLinkedList!(Token);
+			this.bufferList.pushBack(this.buffer);
+		}
 		this.listModMutex.unlock();
 		this.noJobQueue.notify();
 	}
 
-	private DLinkedList!(Token) syncPop() {
-		this.listModMutex.lock();
-		return this.buffer.popFront();
-		this.listModMutex.unlock();
-	}
+	private DLinkedList!(Token) syncPop()
+		in { 
+			this.listModMutex.lock();
+		}
+		out {
+			this.listModMutex.unlock();
+		}
+		body {
+			return this.bufferList.popFront();
+		}
 
 	public void stop() {
 		this.stopVar = true;	

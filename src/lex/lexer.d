@@ -1,9 +1,11 @@
 module lex.lexer;
 
 import std.stdio;
+import std.conv;
 
 import lex.source;
 import lex.token;
+import pars.parser;
 import util.stringbuffer;
 import util.stacktrace;
 
@@ -20,12 +22,14 @@ private string errorToString(Error error) {
 
 public class Lexer {
 	private Source sourceFile;
+	private Parser parser;
 
-	this(Source sourceFile) {
+	this(Source sourceFile, Parser parser) {
 		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, "Lexer.this");
 		st.putArgs("string", "sourceFile", sourceFile.toString());
 
 		this.sourceFile = sourceFile;
+		this.parser = parser;
 	}
 
 	public void lex() {
@@ -37,8 +41,6 @@ public class Lexer {
 		bool pop = false;
 		while(this.sourceFile.nextLineExists()) {
 			curLine = this.sourceFile.getNextLine();
-			Token parsed;
-			Token splitter;
 			foreach(uint idx, char it; curLine) {
 				pop = false;
 				if(it == ' ' || it == '\t') {
@@ -69,21 +71,27 @@ public class Lexer {
 						break;
 					//puction
 					case '[', ']', '(', ')', '{', '}', ',', ';', ':', '!', '?',
-						 '$':
-						splitter = Lexer.puncToToken(it);
-						pop = true;
+						 '$', ' ':
+						//push first token
+						string sbCntnt = sb.getString();
+						if(!sb.holdsNumberChar()) {
+							TokenType lexed;
+							if(sbCntnt in keywordToTokenType) {
+								lexed = keywordToTokenType[sbCntnt];
+								this.parser.syncPush(new Token(lexed));
+							}
+						} else {
+							this.parser.syncPush(new Token(TokenType.Identifier, to!(dstring)(sbCntnt)));
+						}
+						
+						//push splitter
+						this.parser.syncPush(Lexer.puncToToken(it));
+						sb.clear();	
 						break;
 					//operater
 					case '^', '%', '&', '/', '=', '*', '+', '~',
 						'-', '<', '>':
-						pop = true;
 						break;
-				}
-
-				//see comment before leading switch case statement
-				//hildsNumberChar is checked because no keyword consists of
-				//numbers
-				if(pop && !sb.holdsNumberChar()) {
 				}
 			}	
 		}	

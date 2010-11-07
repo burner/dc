@@ -6,6 +6,8 @@ import std.stdio;
 import compilerinfo;
 import container.dlst;
 import lex.token;
+import lex.source;
+import lex.lexer;
 import pars.parser;
 import util.stacktrace;
 
@@ -13,14 +15,16 @@ void main() {
 	debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, "main");
 	writefln("BuildID = %u", compilerinfo.CompilerID);
 	writefln("Git version = %s", compilerinfo.GitHash);
-
+	
+	string[] ts = [ "int main(string[] args) {",
+		"\t\tint  foo = 44;",
+		"return foo;",
+		"}"];
+	
+	Source tsf = new Source("tst.d", ts);
 	Parser p = new Parser();
+	Lexer lex = new Lexer(tsf, p);
+	lex.lex();
 	p.start();
-
-	auto ll = new DLinkedList!(Token)();
-	ll.pushBack(new Token(TokenType.Abstract));
-	p.syncPush(ll);
-
-	Thread.sleep(100);
 	p.stop();
 }

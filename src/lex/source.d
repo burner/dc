@@ -47,7 +47,7 @@ public class Source : Printable {
 
 	public bool nextLineExists() {
 		if(!this.open) this.openFile();
-		return this.file.length > this.curLine;
+		return this.file.length > this.curLine+1;
 	}
 
 	private void openFile() {

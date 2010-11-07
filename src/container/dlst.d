@@ -112,7 +112,6 @@ public class DLinkedList(T) {
 		}
 		return 0;
 	}
-				
 	
 	@property
 	public uint getSize() {

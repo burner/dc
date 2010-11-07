@@ -81,7 +81,9 @@ public final class StackTrace {
 				tmp ~= to!(string)(va_arg!(double)(_argptr));
 				tmp ~= " ";
 			} else {
-				writefln("%s:%d Unkown type %s", __FILE__, __LINE__, typeid(_arguments[i]));
+				debug writefln("debug MSG at: %s:%d Unkown type %s", __FILE__
+					, __LINE__, typeid(_arguments[i]));
+				//StackTrace.printTrace();
 			}
 		}
 		//writeln(tmp);
