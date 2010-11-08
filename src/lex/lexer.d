@@ -44,7 +44,7 @@ public class Lexer {
 			curLine = this.sourceFile.getNextLine();
 			foreach(uint idx, char it; curLine) {
 				pop = false;
-				debug(512) writeln(__FILE__, ":", __LINE__, " currentChar = ", it);
+				debug(1025) writeln(__FILE__, ":", __LINE__, " currentChar = ", it);
 				//get the next char and put it into the StringBuffer.
 				//should a puction,operator or parenthess char follow check if
 				//stringbuffer contents equals an keyword. 
@@ -57,6 +57,8 @@ public class Lexer {
 						if(sb.firstIsNumber()) {
 							this.raiseLexError(idx, it, curLine,
 							this.sourceFile, Error.CHAR_AFTER_BEGIN_NUMBER);
+						} else if(sb.holdsOperator) {
+
 						} else {
 							sb.pushBack(it);
 						}
@@ -98,13 +100,15 @@ public class Lexer {
 
 	private void emitToken(in StringBuffer!(char) sb) {
 		string sbCntnt = sb.getString();
-		debug(512) writeln(__FILE__,":", __LINE__, " sb = ", sbCntnt);
-		if(!sb.holdsNumberChar()) {
+		debug(1025) writeln(__FILE__,":", __LINE__, " sb = ", sbCntnt);
+		if(!sb.holdsNumberChar() && !sb.holdsOperator()) {
 			TokenType lexed;
 			if(sbCntnt in keywordToTokenType) {
 				lexed = keywordToTokenType[sbCntnt];
 				this.parser.syncPush(new Token(lexed));
 			}
+		} else if(sb.holdsOperator()) {
+			return;	
 		} else {
 			this.parser.syncPush(new Token(TokenType.Identifier, to!(dstring)(sbCntnt)));
 		}

@@ -1,6 +1,7 @@
 module lex.token;
 
 public static TokenType[string] keywordToTokenType;
+public static TokenType[string] operatorToTokenType;
 
 public static immutable string[182] tokenToString = [
 "none", "identifier", "string literal", "character literal",
@@ -144,6 +145,66 @@ static this() {
 		keywordToTokenType["@trusted"] = atTrusted;
 		keywordToTokenType["@system"] = atSystem;
 		keywordToTokenType["@disable"] = atDisable;
+/*
+	/
+	/=
+	 .
+	 // ..
+	 // ...
+	 // &
+	   // &=
+	   // &&
+	  // |
+	// |=
+	// ||
+	  // -
+	// -=
+	// --
+	  // +
+	// +=
+	// ++
+	  // <
+	// <=
+	// <<
+	,  // <<=
+	   // <>
+	n, // <>= 
+	   // >
+	 // >=
+	ign, // >>=
+	ign, // >>>=
+	   // >>
+	   // >>>
+		// !
+	  // !=
+		 // !<>
+	ssign,  // !<>=
+		   // !<
+		 // !<=
+			// !>
+	n,	  // !>=
+		  // (
+		 // )
+			// [
+		   // ]
+		  // {
+		 // }
+		   // ?
+		  // ,
+		  // ;
+		  // :
+		 // $
+		 // =
+		   // ==
+			// *
+		  // *=
+			// %
+		  // %=
+		  // ^
+			// ^=
+			// ^^
+		  // ~
+			// ~= */
 	}
 	keywordToTokenType.rehash();
 }
