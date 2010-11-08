@@ -2,6 +2,7 @@ module lex.lexer;
 
 import std.stdio;
 import std.conv;
+import std.string;
 
 import lex.source;
 import lex.token;
@@ -43,12 +44,13 @@ public class Lexer {
 			curLine = this.sourceFile.getNextLine();
 			foreach(uint idx, char it; curLine) {
 				pop = false;
-				if(it == ' ' || it == '\t') {
-					continue;
-				}
+				debug(512) writeln(__FILE__, ":", __LINE__, " currentChar = ", it);
 				//get the next char and put it into the StringBuffer.
 				//should a puction,operator or parenthess char follow check if
 				//stringbuffer contents equals an keyword. 
+				if(sb.getSize() == 0 && ( it == ' ' || it == '\t') ) {
+					continue;
+				}
 				switch(it) {
 					//character
 					case 'A': .. case 'Z': case 'a': .. case 'z':
@@ -71,19 +73,10 @@ public class Lexer {
 						break;
 					//puction
 					case '[', ']', '(', ')', '{', '}', ',', ';', ':', '!', '?',
-						 '$', ' ':
+						 '$':
 						//push first token
-						string sbCntnt = sb.getString();
-						if(!sb.holdsNumberChar()) {
-							TokenType lexed;
-							if(sbCntnt in keywordToTokenType) {
-								lexed = keywordToTokenType[sbCntnt];
-								this.parser.syncPush(new Token(lexed));
-							}
-						} else {
-							this.parser.syncPush(new Token(TokenType.Identifier, to!(dstring)(sbCntnt)));
-						}
-						
+						this.emitToken(sb);
+
 						//push splitter
 						this.parser.syncPush(Lexer.puncToToken(it));
 						sb.clear();	
@@ -91,10 +84,30 @@ public class Lexer {
 					//operater
 					case '^', '%', '&', '/', '=', '*', '+', '~',
 						'-', '<', '>':
+						sb.pushBackOp(it);
+						break;
+
+					case ' ', '\t':
+						this.emitToken(sb);
+						sb.clear();	
 						break;
 				}
 			}	
 		}	
+	}
+
+	private void emitToken(in StringBuffer!(char) sb) {
+		string sbCntnt = sb.getString();
+		debug(512) writeln(__FILE__,":", __LINE__, " sb = ", sbCntnt);
+		if(!sb.holdsNumberChar()) {
+			TokenType lexed;
+			if(sbCntnt in keywordToTokenType) {
+				lexed = keywordToTokenType[sbCntnt];
+				this.parser.syncPush(new Token(lexed));
+			}
+		} else {
+			this.parser.syncPush(new Token(TokenType.Identifier, to!(dstring)(sbCntnt)));
+		}
 	}
 
 	private static Token puncToToken(char punc) {

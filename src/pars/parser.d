@@ -48,7 +48,7 @@ public class Parser : Thread {
 
 	public void syncPush(Token toPush) {
 		this.listModMutex.lock();
-		debug writeln("pushed new Token ", toPush.getType());
+		debug writeln("pushed new Token ", tokenTypeToString(toPush.getType()));
 		this.buffer.pushBack(toPush);
 		
 		if(toPush.getType() == TokenType.Semicolon) {

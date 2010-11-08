@@ -18,6 +18,7 @@ public template StringBuffer(T) {
 		private uint initSize;
 		private int bufferPointer;
 		private bool holdsNumber;
+		private bool holdsOp;
 		private bool firstCharIsNumber;
 
 		public this(in uint initSize) {
@@ -28,6 +29,7 @@ public template StringBuffer(T) {
 			this.initSize = initSize;
 			this.bufferPointer = 0;
 			this.holdsNumber = false;
+			this.holdsOp = false;
 			this.firstCharIsNumber = false;
 			this.buffer = new T[this.initSize];
 		}
@@ -35,6 +37,8 @@ public template StringBuffer(T) {
 		public void clear() {
 			this.bufferPointer = 0;
 			this.holdsNumber = false;
+			this.firstCharIsNumber = false;
+			this.holdsOp = false;
 		}
 
 		public bool compare(in string against) {
@@ -45,15 +49,28 @@ public template StringBuffer(T) {
 			return true;
 		}
 
-		public bool holdsNumberChar() {
+		public bool holdsNumberChar() const {
 			return this.holdsNumber;
 		}
 
-		public bool firstIsNumber() {
+		public bool firstIsNumber() const  {
 			return this.firstCharIsNumber;
 		}
 
+		public bool holdsOperator() const {
+			return this.holdsOp;
+		}
+
 		public void pushBack(in T toAdd) {
+			if(this.bufferPointer == initSize) {
+				this.buffer.length = initSize * 2u;
+				this.initSize *= 2u;
+			}
+			this.buffer[this.bufferPointer++] = toAdd;
+		}
+
+		public void pushBackOp(in T toAdd) {
+			this.holdsOp = true;
 			if(this.bufferPointer == initSize) {
 				this.buffer.length = initSize * 2u;
 				this.initSize *= 2u;
@@ -73,21 +90,20 @@ public template StringBuffer(T) {
 		}
 		
 		public T popBack() 
-			in {}
+			in {
+				assert(this.bufferPointer, 
+					"Tryed to popBack empty StringBuffer");
+			}
 			out {this.bufferPointer--;}
 			body {
-			if(this.bufferPointer > 0) {
 				return this.buffer[this.bufferPointer-1];
-			} else {
-				assert(0, "Tryed to popBack empty StringBuffer");
-			}
 			}
 
-		public int getSize() {
+		public int getSize() const {
 			return this.bufferPointer;
 		}
 
-		public immutable(T)[] getString() {
+		public immutable(T)[] getString() const {
 			return this.buffer[0 .. this.bufferPointer].idup;
 		}
 	}
