@@ -145,68 +145,58 @@ static this() {
 		keywordToTokenType["@trusted"] = atTrusted;
 		keywordToTokenType["@system"] = atSystem;
 		keywordToTokenType["@disable"] = atDisable;
-/*
-	/
-	/=
-	 .
-	 // ..
-	 // ...
-	 // &
-	   // &=
-	   // &&
-	  // |
-	// |=
-	// ||
-	  // -
-	// -=
-	// --
-	  // +
-	// +=
-	// ++
-	  // <
-	// <=
-	// <<
-	,  // <<=
-	   // <>
-	n, // <>= 
-	   // >
-	 // >=
-	ign, // >>=
-	ign, // >>>=
-	   // >>
-	   // >>>
-		// !
-	  // !=
-		 // !<>
-	ssign,  // !<>=
-		   // !<
-		 // !<=
-			// !>
-	n,	  // !>=
-		  // (
-		 // )
-			// [
-		   // ]
-		  // {
-		 // }
-		   // ?
-		  // ,
-		  // ;
-		  // :
-		 // $
-		 // =
-		   // ==
-			// *
-		  // *=
-			// %
-		  // %=
-		  // ^
-			// ^=
-			// ^^
-		  // ~
-			// ~= */
+
+		operatorToTokenType["/"] = Slash;
+		operatorToTokenType["/="] = SlashAssign;
+		operatorToTokenType["."] = Dot;
+		operatorToTokenType[".."] = DoubleDot;
+		operatorToTokenType["..."] = TripleDot;
+		operatorToTokenType["&"] = Ampersand;
+		operatorToTokenType["&="] = AmpersandAssign;
+		operatorToTokenType["&&"] = DoubleAmpersand;
+		operatorToTokenType["|"] = Pipe;
+		operatorToTokenType["|="] = PipeAssign;
+		operatorToTokenType["||"] = DoublePipe;
+		operatorToTokenType["-"] = Dash;
+		operatorToTokenType["-="] = DashAssign;
+		operatorToTokenType["--"] = DoubleDash;
+		operatorToTokenType["+"] = Plus;
+		operatorToTokenType["+="] = PlusAssign;
+		operatorToTokenType["++"] = DoublePlus;
+		operatorToTokenType["<"] = Less;
+		operatorToTokenType["<="] = LessAssign;
+		operatorToTokenType["<<"] = DoubleLess;
+		operatorToTokenType["<<="] = DoubleLessAssign;
+		operatorToTokenType["<>"] = LessGreater;
+		operatorToTokenType["<>="] = LessGreaterAssign;
+		operatorToTokenType[">"] = Greater;
+		operatorToTokenType[">="] = GreaterAssign;
+		operatorToTokenType[">>="] = DoubleGreaterAssign;
+		operatorToTokenType[">>>="] = TripleGreaterAssign;
+		operatorToTokenType[">>"] = DoubleGreater;
+		operatorToTokenType[">>>"] = TripleGreater;
+		operatorToTokenType["!"] = Bang;
+		operatorToTokenType["!="] = BangAssign;
+		operatorToTokenType["!<>"] = BangLessGreater;
+		operatorToTokenType["!<>="] = BangLessGreaterAssign;
+		operatorToTokenType["!<"] = BangLess;
+		operatorToTokenType["!<="] = BangLessAssign;
+		operatorToTokenType["!>"] = BangGreater;
+		operatorToTokenType["!>="] = BangGreaterAssign;
+		operatorToTokenType["="] = Assign;
+		operatorToTokenType["=="] = DoubleAssign;
+		operatorToTokenType["*"] = Asterix;
+		operatorToTokenType["*="] = AsterixAssign;
+		operatorToTokenType["%"] = Percent;
+		operatorToTokenType["%="] = PercentAssign;
+		operatorToTokenType["^"] = Caret;
+		operatorToTokenType["^="] = CaretAssign;
+		operatorToTokenType["^^"] = DoubleCaret;
+		operatorToTokenType["~"] = Tilde;
+		operatorToTokenType["~="] = TildeAssign;
 	}
 	keywordToTokenType.rehash();
+	operatorToTokenType.rehash();
 }
 
 public enum TokenType {
