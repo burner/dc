@@ -49,6 +49,7 @@ public class Lexer {
 				//should a puction,operator or parenthess char follow check if
 				//stringbuffer contents equals an keyword. 
 				if(sb.getSize() == 0 && ( it == ' ' || it == '\t') ) {
+					debug(1025) writeln(__FILE__, ":", __LINE__, "continue");
 					continue;
 				}
 				switch(it) {
@@ -88,8 +89,8 @@ public class Lexer {
 						'-', '<', '>':
 						sb.pushBackOp(it);
 						break;
-
 					case ' ', '\t':
+						debug(1025) writeln(__FILE__,":",__LINE__, "blank or tab emit token");
 						this.emitToken(sb);
 						sb.clear();	
 						break;
@@ -106,9 +107,15 @@ public class Lexer {
 			if(sbCntnt in keywordToTokenType) {
 				lexed = keywordToTokenType[sbCntnt];
 				this.parser.syncPush(new Token(lexed));
+			} else {
+				this.parser.syncPush(new Token(TokenType.Identifier));
 			}
 		} else if(sb.holdsOperator()) {
-			return;	
+			TokenType lexed;
+			if(sbCntnt in operatorToTokenType) {
+				lexed = operatorToTokenType[sbCntnt];
+				this.parser.syncPush(new Token(lexed));
+			}
 		} else {
 			this.parser.syncPush(new Token(TokenType.Identifier, to!(dstring)(sbCntnt)));
 		}
