@@ -3,7 +3,7 @@ module lex.token;
 public static TokenType[string] keywordToTokenType;
 public static TokenType[string] operatorToTokenType;
 
-public static immutable string[182] tokenToString = [
+public static immutable string[183] tokenToString = [
 "none", "identifier", "string literal", "character literal",
 "integer literal", "float literal", "abstract", "alias", "align",
 "asm", "assert", "auto", "body", "bool", "break", "byte", "case",
@@ -16,7 +16,7 @@ public static immutable string[182] tokenToString = [
 "invariant", "ireal", "is", "lazy", "long", "macro", "mixin", "module",
 "new", "nothrow", "null", "out", "override", "package", "pragma",
 "private", "protected", "public", "pure", "real", "ref", "return",
-"scope", "shared", "short", "static", "struct", "super",
+"scope", "shared", "short", "static", "struct", "string", "super",
 "switch", "synchronized", "template", "this", "throw", "true",
 "try", "typedef", "typeid", "typeof", "ubyte", "ucent", "uint",
 "ulong", "union", "unittest", "ushort", "version", "void", "volatile",
@@ -111,6 +111,7 @@ static this() {
 		keywordToTokenType["short"] = Short;
 		keywordToTokenType["static"] = Static;
 		keywordToTokenType["struct"] = Struct;
+		keywordToTokenType["string"] = String;
 		keywordToTokenType["super"] = Super;
 		keywordToTokenType["switch"] = Switch;
 		keywordToTokenType["synchronized"] = Synchronized;
@@ -228,7 +229,7 @@ public enum TokenType {
 	Out, Override,
 	Package, Pragma, Private, Protected, Public, Pure,
 	Real, Ref, Return,
-	Scope, Shared, Short, Static, Struct, Super,
+	Scope, Shared, Short, Static, String, Struct, Super,
 	Switch, Synchronized,
 	Template, This, Throw, True, Try, Typedef,
 	Typeid, Typeof,
@@ -477,6 +478,8 @@ string tokenTypeToString(TokenType ty) {
 			return "Static";
 		case TokenType.Struct:
 			return "Struct";
+		case TokenType.String:
+			return "String";
 		case TokenType.Super:
 			return "Super";
 		case TokenType.Switch:

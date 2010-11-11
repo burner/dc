@@ -1,9 +1,9 @@
 DC=dmd
-CFLAGS=-c -Isrc -debug -g -debug=1024
+CFLAGS=-c -w -Isrc -debug -gc -debug=1024
 TARGET=dc
-BUILD_NUMBER_FILE=CompilerInfo.d
+OBJDIR="objs"
 
-all: $(TARGET)
+all:${TARGET}
 
 OBJS=dlst.o lexer.o parser.o stringbuffer.o token.o stacktrace.o source.o token.o
 

@@ -12,12 +12,15 @@ import util.stacktrace;
 
 private enum Error {
 	CHAR_AFTER_BEGIN_NUMBER,
+	UNKNOWN_INPUT_CHARACTER
 }
 
 private string errorToString(Error error) {
-	switch(error) {
+	final switch(error) {
 		case Error.CHAR_AFTER_BEGIN_NUMBER:
 			return "CHAR_AFTER_BEGIN_NUMBER";
+		case Error.UNKNOWN_INPUT_CHARACTER:
+			return "UNKNOWN_INPUT_CHARACTER";
 	}
 }
 
@@ -94,6 +97,10 @@ public class Lexer {
 						this.emitToken(sb);
 						sb.clear();	
 						break;
+					default:
+						this.raiseLexError(idx, it, curLine,
+							this.sourceFile, Error.UNKNOWN_INPUT_CHARACTER);
+						
 				}
 			}	
 		}	
@@ -102,6 +109,9 @@ public class Lexer {
 	private void emitToken(in StringBuffer!(char) sb) {
 		string sbCntnt = sb.getString();
 		debug(1025) writeln(__FILE__,":", __LINE__, " sb = ", sbCntnt);
+		if(sb.getSize() == 0) {
+			return;
+		}
 		if(!sb.holdsNumberChar() && !sb.holdsOperator()) {
 			TokenType lexed;
 			if(sbCntnt in keywordToTokenType) {
@@ -161,6 +171,11 @@ public class Lexer {
 				writefln("lex error at: %20s%d position %d: can't place char in 
 					identifer which started with a number", 
 					source.getFileName(), source.currentLineNumber(), idx);
+				return;
+			case Error.UNKNOWN_INPUT_CHARACTER:
+				writefln("lex error at: %20s%d position %d: the input character
+					is not known",source.getFileName(),
+					source.currentLineNumber(), idx);
 				return;
 		}
 	}

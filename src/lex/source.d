@@ -33,7 +33,7 @@ public class Source : Printable {
 
 	public string getNextLine() {
 		if(!this.open) this.openFile();
-		return this.file[++this.curLine];
+		return this.file[this.curLine++];
 	}
 
 	public uint numberOfLines() {
@@ -47,7 +47,7 @@ public class Source : Printable {
 
 	public bool nextLineExists() {
 		if(!this.open) this.openFile();
-		return this.file.length > this.curLine+1;
+		return this.file.length > this.curLine;
 	}
 
 	private void openFile() {
@@ -60,7 +60,7 @@ public class Source : Printable {
 		return this.fileName;
 	}
 
-	public string toString() const {
+	override public string toString() const {
 		return this.fileName;
 	}
 }
