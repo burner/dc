@@ -692,8 +692,12 @@ public class Token {
 		this.value = value;
 	}
 
-	public TokenType getType() {
+	public TokenType getType() const {
 		return this.type;
+	}
+
+	public dstring getValue() const {
+		return this.value;	
 	}
 }
 

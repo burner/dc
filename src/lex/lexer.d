@@ -112,14 +112,17 @@ public class Lexer {
 		if(sb.getSize() == 0) {
 			return;
 		}
+		// keyword
 		if(!sb.holdsNumberChar() && !sb.holdsOperator()) {
 			TokenType lexed;
 			if(sbCntnt in keywordToTokenType) {
 				lexed = keywordToTokenType[sbCntnt];
 				this.parser.syncPush(new Token(lexed));
 			} else {
-				this.parser.syncPush(new Token(TokenType.Identifier));
+				this.parser.syncPush(new Token(TokenType.Identifier,
+					to!(dstring)(sbCntnt)));
 			}
+		// operator keyword
 		} else if(sb.holdsOperator()) {
 			TokenType lexed;
 			if(sbCntnt in operatorToTokenType) {
@@ -127,7 +130,9 @@ public class Lexer {
 				this.parser.syncPush(new Token(lexed));
 			}
 		} else {
-			this.parser.syncPush(new Token(TokenType.Identifier, to!(dstring)(sbCntnt)));
+			// identifer
+			this.parser.syncPush(new Token(TokenType.Identifier, 
+				to!(dstring)(sbCntnt)));
 		}
 	}
 
