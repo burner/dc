@@ -5,7 +5,7 @@ OBJDIR="objs"
 
 all:${TARGET}
 
-OBJS=dlst.o lexer.o parser.o stringbuffer.o token.o stacktrace.o source.o token.o
+OBJS=algo.o dlst.o lexer.o parser.o stringbuffer.o token.o stacktrace.o source.o token.o
 
 $(TARGET): $(OBJS) Makefile src/main.d
 	sh IncreBuildId.sh
@@ -22,6 +22,9 @@ count:
 clean:
 	rm -f objs/*.o $(TARGET)
 	rm -f *.o $(TARGET)
+
+algo.o: Makefile src/util/algo.d 
+	$(DC) $(CFLAGS) src/util/algo.d 
 
 dlst.o: Makefile src/container/dlst.d 
 	$(DC) $(CFLAGS) src/container/dlst.d 
