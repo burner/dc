@@ -32,7 +32,8 @@ public class Lexer {
 	private Parser parser;
 
 	this(Source sourceFile, Parser parser) {
-		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, "Lexer.this");
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, 
+			"Lexer.this");
 		st.putArgs("string", "sourceFile", sourceFile.toString());
 
 		this.sourceFile = sourceFile;
@@ -50,7 +51,8 @@ public class Lexer {
 			curLine = this.sourceFile.getNextLine();
 			foreach(uint idx, char it; curLine) {
 				pop = false;
-				debug(1025) writeln(__FILE__, ":", __LINE__, " currentChar = ", it);
+				debug(1025) writeln(__FILE__, ":", __LINE__, " currentChar = ",
+					 it);
 				//get the next char and put it into the StringBuffer.
 				//should a puction,operator or parenthess char follow check if
 				//stringbuffer contents equals an keyword. 

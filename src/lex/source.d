@@ -5,6 +5,7 @@ import util.stacktrace;
 public class Source : Printable {
 	private string fileName;
 	private string[] file;
+	private uint curIdx;
 	private uint curLine;
 	private bool open;
 
@@ -17,6 +18,7 @@ public class Source : Printable {
 		this.fileName = fileName;
 		this.file = null;
 		this.curLine = 0;
+		this.curIdx = 0;
 	}
 
 	public this(string fileName, string[] file) {
@@ -29,6 +31,30 @@ public class Source : Printable {
 		this.file = file;
 		this.curLine = 0;
 		this.open = true;
+		this.curIdx = 0;
+	}
+
+	public char getNextChar() 
+		in { }
+		out {
+			this.curIdx++;
+			if(this.curIdx == this.file[this.curLine].length) {
+				this.curLine++;
+				this.curIdx = 0;
+			}
+		}
+		body {
+			if(this.curLine < this.file.length 
+				&& this.curIdx < this.file[this.curLine].length) {
+				return this.file[this.curLine][this.curIdx];
+			} else {
+				throw new Exception("There are no more character to read");
+			}
+		}
+
+	public bool hasNextChar() {
+		return this.curLine < this.file.length 
+			&& this.curIdx < this.file[this.curLine].length;
 	}
 
 	public string getNextLine() {
