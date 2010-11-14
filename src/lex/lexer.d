@@ -81,7 +81,7 @@ public class Lexer {
 						sb.pushBack(it);
 						break;
 					//puction
-					case '[', ']', '(', ')', '{', '}', ',', ';', ':', '!', '?',
+					case '[', ']', '(', ')', '{', '}', ',', ';', ':', '?',
 						 '$':
 						//push first token
 						this.emitToken(sb);
@@ -91,12 +91,13 @@ public class Lexer {
 						sb.clear();	
 						break;
 					//operater
-					case '^', '%', '&', '/', '=', '*', '+', '~',
+					case '^', '%', '&', '/', '=', '*', '+', '~', '!',
 						'-', '<', '>':
 						sb.pushBackOp(it);
 						break;
 					case ' ', '\t':
-						debug(1025) writeln(__FILE__,":",__LINE__, "blank or tab emit token");
+						debug(1025) writeln(__FILE__,":",__LINE__, "blank or tab
+							 emit token");
 						this.emitToken(sb);
 						sb.clear();	
 						break;
