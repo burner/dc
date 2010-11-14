@@ -12,14 +12,14 @@ import std.stdio;
  * 		sort!(int)(a, &cmp, 2, 7);
  * 		sort!(int)(a, function(in int l, in int r) { return l < r; });
  */
-void sort(T)(T[] a, bool function(in T a, in T b) cmp, uint leftb = 0,
+pure void sort(T)(T[] a, bool function(in T a, in T b) cmp, uint leftb = 0,
 		 uint rightb= 0) {
 	debug assert(rightb <= a.length-1, "right index out of bound");
 	debug assert(leftb <= rightb, "left index to big");
 
 	//swap function
 	void swap(ref T m, ref T n) {
-		int tmp = m;
+		T tmp = m;
 		m = n;
 		n = tmp;
 	}
@@ -30,7 +30,7 @@ void sort(T)(T[] a, bool function(in T a, in T b) cmp, uint leftb = 0,
 		T pivot = a[idx];
 		swap(a[idx], a[right]);
 		for(int i = idx = left; i < right; i++) {
-			if(a[i] < pivot) {
+			if(cmp(a[i], pivot)) {
 				swap(a[idx++], a[i]);
 			}
 		}

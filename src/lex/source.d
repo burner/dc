@@ -10,7 +10,7 @@ public class Source : Printable {
 
 	public this(string fileName, bool open = false) {
 		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
-			"this");
+			"Source.this");
 		debug st.putArgs("string", "fileName", fileName, 
 			"bool", "open", open);
 
@@ -32,20 +32,28 @@ public class Source : Printable {
 	}
 
 	public string getNextLine() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"getNextLine");
 		if(!this.open) this.openFile();
 		return this.file[this.curLine++];
 	}
 
 	public uint numberOfLines() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"numberOfLines");
 		if(!this.open) this.openFile();
 		return this.file.length;
 	}
 
 	public uint currentLineNumber() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"currentLineNumber");
 		return this.curLine;
 	}
 
 	public bool nextLineExists() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"nextLineExists");
 		if(!this.open) this.openFile();
 		return this.file.length > this.curLine;
 	}
@@ -57,10 +65,14 @@ public class Source : Printable {
 	}
 
 	public string getFileName() const {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"getFileName");
 		return this.fileName;
 	}
 
 	override public string toString() const {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"toString");
 		return this.fileName;
 	}
 }

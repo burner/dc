@@ -47,9 +47,6 @@ public class DLinkedList(T) {
 	}
 
 	public void pushBack(T store) {
-		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
-			"pushBack");
-			
 		if(this.size == 0) {
 			this.head = new DLinkedList.Elem!(T)(store, null);
 			this.tail = head;
@@ -62,9 +59,6 @@ public class DLinkedList(T) {
 	}
 
 	public void pushFront(T store) {
-		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
-			"pushFront");
-			
 		if(this.size == 0) {	
 			this.head = new DLinkedList.Elem!(T)(store, null);
 			this.tail = head;
@@ -78,8 +72,6 @@ public class DLinkedList(T) {
 	}
 
 	public T popBack() {
-		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
-			"popBack");
 		if(this.size > 1) {
 			Elem!(T) tmp = this.tail;
 			this.tail = tail.getPrev();
@@ -98,8 +90,6 @@ public class DLinkedList(T) {
 	}	
 
 	public T popFront() {
-		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
-			"popFront");
 		if(this.size > 1) {
 			Elem!(T) tmp = this.head;
 			this.head = head.getNext();

@@ -27,4 +27,6 @@ void main() {
 	lex.lex();
 	p.start();
 	p.stop();
+	p.join();
+	//StackTrace.printStats();
 }

@@ -19,10 +19,13 @@ public class Parser : Thread {
 	private DLinkedList!(DLinkedList!(Token)) bufferList;
 
 	public this() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"this");
+
 		super(&run);
 		this.stopVar = false;
 		this.listModMutex = new Mutex();
-		this.noJobQueue = new Semaphore();
+		this.noJobQueue = new Semaphore(0);
 		this.buffer = new DLinkedList!(Token);
 		this.bufferList = new DLinkedList!(DLinkedList!(Token));
 		this.bufferList.pushBack(this.buffer);
@@ -37,18 +40,13 @@ public class Parser : Thread {
 		while(true) {
 			//Us noJobQueue to wait if there is nothing to do.
 			this.noJobQueue.wait();
-
-			try {
-				currentStat = this.syncPop();
-			} catch(Exception e) {
-				return;
-			}
+			currentStat = this.syncPop();
 
 			foreach(Token it; currentStat) {
 				write(tokenTypeToString(it.getType()), " ");
 			}
 			writeln();
-			if(this.stopVar && this.buffer.getSize() == 0) return;
+			if(this.stopVar && this.bufferList.getSize() == 0) return;
 		}
 	}
 
@@ -92,15 +90,21 @@ public class Parser : Thread {
 			if(this.bufferList.getSize() > 0) {
 				return this.bufferList.popFront();
 			} else {
-				throw new Exception("bufferList is empty");
+				assert(0, "Tryed to pop empty list");
 			}
 		}
 
 	public void stop() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"stop");
+
 		this.stopVar = true;	
 	}
 
 	public void increCount() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"increCount");
+
 		this.noJobQueue.notify();
 	}
 }

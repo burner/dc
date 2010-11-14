@@ -16,6 +16,9 @@ private enum Error {
 }
 
 private string errorToString(Error error) {
+	debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+		"errorToString");
+		
 	final switch(error) {
 		case Error.CHAR_AFTER_BEGIN_NUMBER:
 			return "CHAR_AFTER_BEGIN_NUMBER";
@@ -107,6 +110,10 @@ public class Lexer {
 	}
 
 	private void emitToken(in StringBuffer!(char) sb) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"emitToken");
+		debug st.putArgs("string", "sb", sb.getString());
+			
 		string sbCntnt = sb.getString();
 		debug(1025) writeln(__FILE__,":", __LINE__, " sb = ", sbCntnt);
 		if(sb.getSize() == 0) {
@@ -137,6 +144,10 @@ public class Lexer {
 	}
 
 	private static Token puncToToken(char punc) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"puncToToken");
+		debug st.putArgs("char", "punc", punc);
+			
 		switch(punc) {
 			case '[':
 				return new Token(TokenType.OpenBracket);

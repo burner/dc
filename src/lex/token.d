@@ -1,5 +1,7 @@
 module lex.token;
 
+import util.stacktrace;
+
 public static TokenType[string] keywordToTokenType;
 public static TokenType[string] operatorToTokenType;
 
@@ -309,6 +311,10 @@ public enum TokenType {
 }
 
 string tokenTypeToString(TokenType ty) {
+	debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+		"tokenTypeToString");
+	debug st.putArgs("string", "ty", ty);
+		
 	final switch(ty) {
 		case TokenType.None:
 			return "None";
@@ -684,23 +690,38 @@ public class Token {
 	private TokenType type;
 
 	public this(TokenType type) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"this");
+		debug st.putArgs("string", "type", tokenTypeToString(type));
+			
 		this.type = type;
 	}
 
 	public this(TokenType type, dstring value) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"this");
+		debug st.putArgs("string", "type", tokenTypeToString(type), 
+			"dstring", "value", value);
+
 		this.type = type;
 		this.value = value;
 	}
 
 	public TokenType getType() const {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"getType");
 		return this.type;
 	}
 
 	public dstring getValue() const {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"getValue");
 		return this.value;	
 	}
 }
 
 static assert(TokenType.min == 0);
-static assert(tokenToString.length == TokenType.max + 1, "the tokenToString array and TokenType enum are out of sync.");
-static assert(TokenType.max + 1 == __traits(allMembers, TokenType).length, "all TokenType enum members must be sequential.");
+static assert(tokenToString.length == TokenType.max + 1, "the tokenToString 
+	array and TokenType enum are out of sync.");
+static assert(TokenType.max + 1 == __traits(allMembers, TokenType).length, 
+	"all TokenType enum members must be sequential.");

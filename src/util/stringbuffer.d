@@ -23,7 +23,7 @@ public template StringBuffer(T) {
 
 		public this(in uint initSize) {
 			debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
-				"this");
+				"StringBuffer.this");
 			debug st.putArgs("uint", "initSize", initSize);
 				
 			this.initSize = initSize;

@@ -1,10 +1,13 @@
 module util.stacktrace;
 
+import core.sync.mutex;
 import std.stdio;
 import std.date;
 import std.conv;
 import std.stdarg;
+
 import container.dlst;
+import util.algo;
 
 public interface Printable {
 	public string toString();
@@ -19,21 +22,29 @@ public final class StackTrace {
 	private uint localDepth;
 
 	private class Stats {
+		string file;
+		uint line;
 		string funcName;
 		uint calls;
 		ulong time;
 	}
 
-	private static Stats[string] allCalls;
+	private __gshared static Stats[string] allCalls;
+	private __gshared static Mutex allCallsMutex;
 	private static uint depth;
 	private static DLinkedList!(StackTrace) stack;
 
 	public static void printStats() {
 		writeln("\nStats of all traced function:");
-		foreach(idx; allCalls.keys) {
-			Stats s = StackTrace.allCalls[idx];
-			writefln("function: %35s\tcalled: %6d\ttotaltime: %10d", s.funcName~"():"~idx, s.calls, s.time);
+		writefln("%55s %15s %15s", "function", "calls", "time in ms");
+		StackTrace.allCallsMutex.lock();
+		Stats[] a = StackTrace.allCalls.values;
+		sort!(Stats)(a, function(in Stats a, in Stats b) {
+			 return a.calls > b.calls; });
+		foreach(it; a) {
+			writefln("%55s %15d, %15d", it.funcName~"() at "~it.file~":"~to!(string)(it.line), it.calls, it.time);
 		}
+		StackTrace.allCallsMutex.unlock();
 	}
 
 	public static void printTrace() {
@@ -45,6 +56,7 @@ public final class StackTrace {
 
 	static this() {
 		StackTrace.stack = new DLinkedList!(StackTrace)();
+		StackTrace.allCallsMutex = new Mutex();
 	}
 
 	this(string file, uint line, string funcName) {
@@ -81,8 +93,6 @@ public final class StackTrace {
 				tmp ~= to!(string)(va_arg!(double)(_argptr));
 				tmp ~= " ";
 			} else {
-				debug writefln("debug MSG at: %s:%d Unkown type %s", __FILE__
-					, __LINE__, typeid(_arguments[i]));
 				//StackTrace.printTrace();
 			}
 		}
@@ -94,6 +104,7 @@ public final class StackTrace {
 		ulong timeDiff = getUTCtime() - this.startTime;
 		//writeln("destructor ", timeDiff);
 		string id = this.file ~ ":" ~ to!string(this.line);
+		StackTrace.allCallsMutex.lock();
 		if(id in StackTrace.allCalls) {
 			Stats s = StackTrace.allCalls[id];
 			s.calls++;
@@ -104,7 +115,10 @@ public final class StackTrace {
 			s.calls++;
 			s.time = timeDiff;	
 			s.funcName = this.funcName;
+			s.line = this.line;
+			s.file= this.file;
 		}
+		StackTrace.allCallsMutex.unlock();
 		StackTrace.depth--;
 		StackTrace.stack.popBack();
 	}
