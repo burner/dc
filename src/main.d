@@ -40,5 +40,5 @@ void main() {
 	p.start();
 	p.stop();
 	p.join();
-	StackTrace.printStats();
+	//StackTrace.printStats();
 }

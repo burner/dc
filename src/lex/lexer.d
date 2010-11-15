@@ -186,6 +186,8 @@ public class Lexer {
 			if(sbCntnt in operatorToTokenType) {
 				lexed = operatorToTokenType[sbCntnt];
 				this.parser.syncPush(new Token(lexed));
+			} else {
+				this.raiseUnknownToken(sbCntnt);
 			}
 		} else {
 			// identifer
@@ -223,6 +225,15 @@ public class Lexer {
 			default:
 				assert(0, "Invalid case : " ~ punc);	
 		}
+	}
+
+	private void raiseUnknownToken(in string uToken) {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"raiseUnknownToken");
+		debug st.putArgs("string", "uToken", uToken);
+			
+		writefln("The sequenze %s doesn't not give valid Operator nor
+			Identifer");
 	}
 
 	private void raiseLexError(uint idx, char it, string curLine,
