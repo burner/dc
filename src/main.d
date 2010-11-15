@@ -17,8 +17,18 @@ void main() {
 	//writefln("Git version = %s", compilerinfo.GitHash);
 	
 	string[] ts = [ "int main(string[] args) {",
+		"// asfdasf",
+		"/* hello world commend */",
+		"/* multiline commend ",
+		"more commend */",
 		"\t\tint  foo = 44;",
+		" printer!(int)(foo);",
+		" printer!(int)foo;",
 		"return foo;",
+		"}",
+		"",
+		"void printer(T)(T t) {",
+		"	writeln(t);",
 		"}"];
 	
 	Source tsf = new Source("tst.d", ts);
@@ -28,5 +38,5 @@ void main() {
 	p.start();
 	p.stop();
 	p.join();
-	//StackTrace.printStats();
+	StackTrace.printStats();
 }

@@ -35,7 +35,10 @@ public class Source : Printable {
 	}
 
 	public char getNextChar() 
-		in { }
+		in { 
+			debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+				"hasNextChar");
+		}
 		out {
 			this.curIdx++;
 			if(this.curIdx == this.file[this.curLine].length) {
@@ -53,6 +56,9 @@ public class Source : Printable {
 		}
 
 	public bool hasNextChar() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"hasNextChar");
+
 		return this.curLine < this.file.length 
 			&& this.curIdx < this.file[this.curLine].length;
 	}
@@ -60,6 +66,7 @@ public class Source : Printable {
 	public string getNextLine() {
 		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
 			"getNextLine");
+
 		if(!this.open) this.openFile();
 		return this.file[this.curLine++];
 	}
@@ -67,6 +74,7 @@ public class Source : Printable {
 	public uint numberOfLines() {
 		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
 			"numberOfLines");
+
 		if(!this.open) this.openFile();
 		return this.file.length;
 	}
@@ -75,6 +83,12 @@ public class Source : Printable {
 		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
 			"currentLineNumber");
 		return this.curLine;
+	}
+
+	public uint getCurrentIdx() const {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"getCurrentIdx");
+		return this.curIdx;
 	}
 
 	public bool nextLineExists() {
@@ -88,6 +102,14 @@ public class Source : Printable {
 		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
 			"openFile");
 
+	}
+
+	public void skipLine() {
+		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
+			"skipLine");
+	
+		this.curLine++;
+		this.curIdx = 0;
 	}
 
 	public string getFileName() const {

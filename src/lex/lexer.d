@@ -47,68 +47,116 @@ public class Lexer {
 		string curLine;
 		//pop = punction operator parenthess
 		bool pop = false;
-		while(this.sourceFile.nextLineExists()) {
-			curLine = this.sourceFile.getNextLine();
-			foreach(uint idx, char it; curLine) {
-				pop = false;
-				debug(1025) writeln(__FILE__, ":", __LINE__, " currentChar = ",
-					 it);
-				//get the next char and put it into the StringBuffer.
-				//should a puction,operator or parenthess char follow check if
-				//stringbuffer contents equals an keyword. 
-				if(sb.getSize() == 0 && ( it == ' ' || it == '\t') ) {
-					debug(1025) writeln(__FILE__, ":", __LINE__, "continue");
-					continue;
-				}
-				switch(it) {
-					//character
-					case 'A': .. case 'Z': case 'a': .. case 'z':
-						if(sb.firstIsNumber()) {
-							this.raiseLexError(idx, it, curLine,
-							this.sourceFile, Error.CHAR_AFTER_BEGIN_NUMBER);
-						} else if(sb.holdsOperator) {
-
-						} else {
-							sb.pushBack(it);
-						}
-						break;
-					//number
-					case '0': .. case '9':
-						if(sb.getSize() == 0) {
-							sb.pushBackNum(it);
-						}
-						break;
-					//the underscore can be used in identifer as well as number
-					case '_':
+		while(this.sourceFile.hasNextChar()) {
+			char it = this.sourceFile.getNextChar();
+			//get the next char and put it into the StringBuffer.
+			//should a puction,operator or parenthess char follow check if
+			//stringbuffer contents equals an keyword. 
+			if(sb.getSize() == 0 && ( it == ' ' || it == '\t') ) {
+				debug(1025) writeln(__FILE__, ":", __LINE__, "continue");
+				continue;
+			}
+			switch(it) {
+				//character
+				case 'A': .. case 'Z': case 'a': .. case 'z':
+					if(sb.firstIsNumber()) {
+						this.raiseLexError(this.sourceFile.getCurrentIdx(), it, curLine,
+						this.sourceFile, Error.CHAR_AFTER_BEGIN_NUMBER);
+					} else if(sb.holdsOperator()) {
+				
+					} else {
 						sb.pushBack(it);
-						break;
-					//puction
-					case '[', ']', '(', ')', '{', '}', ',', ';', ':', '?',
-						 '$':
-						//push first token
-						this.emitToken(sb);
+					}
+					break;
+				//number
+				case '0': .. case '9':
+					sb.pushBackNum(it);
+					break;
+				//the underscore can be used in identifer as well as number
+				case '_':
+					sb.pushBack(it);
+					break;
+				//puction
+				case '[', ']', '(', ')', '{', '}', ',', ';', ':', '?',
+					 '$':
+					//push first token
+					this.emitToken(sb);
 
-						//push splitter
-						this.parser.syncPush(Lexer.puncToToken(it));
+					//push splitter
+					this.parser.syncPush(Lexer.puncToToken(it));
+					sb.clear();	
+					break;
+				//operater
+				case '/':
+					if(sb.getSize() > 0 && sb.getLastChar() == '/') {
+						sb.removeLast();
+						this.emitToken(sb);	
+						this.sourceFile.skipLine();
 						sb.clear();	
+					} else {
+						sb.pushBackOp(it);	
+					}
+					break;
+				case '*':
+					//you find yourself a comment
+					if(sb.getSize() > 0 && sb.getLastChar() == '/') {
+						sb.removeLast();
+						this.emitToken(sb);	
+						sb.clear();
+						char tmp;	
+						while(this.sourceFile.hasNextChar()) {
+							tmp = this.sourceFile.getNextChar();
+							if(tmp == '/' && sb.getSize() > 0 
+								&& sb.getLastChar() == '*') {
+								sb.clear();
+								break;
+							}
+							sb.pushBack(tmp);
+						}
 						break;
-					//operater
-					case '^', '%', '&', '/', '=', '*', '+', '~', '!',
-						'-', '<', '>':
+					} else {
 						sb.pushBackOp(it);
 						break;
-					case ' ', '\t':
-						debug(1025) writeln(__FILE__,":",__LINE__, "blank or tab
-							 emit token");
-						this.emitToken(sb);
-						sb.clear();	
+					}
+				case '+':
+					//you find yourself a nested comment
+					if(sb.getSize() > 0 && sb.getLastChar() == '/') {
+						sb.removeLast();
+						this.emitToken(sb);	
+						sb.clear();
+						char tmp;	
+						while(this.sourceFile.hasNextChar()) {
+							tmp = this.sourceFile.getNextChar();
+							if(tmp == '/' && sb.getSize() > 0 
+								&& sb.getLastChar() == '*') {
+								sb.clear();
+								break;
+							}
+							sb.pushBack(tmp);
+						}
 						break;
-					default:
-						this.raiseLexError(idx, it, curLine,
-							this.sourceFile, Error.UNKNOWN_INPUT_CHARACTER);
-						
-				}
-			}	
+					} else {
+						sb.pushBackOp(it);
+						break;
+					}
+				case '^', '%', '&', '=', '~', '!',
+					'-', '<', '>':
+					if(!sb.holdsOperator()) {
+						this.emitToken(sb);
+						sb.clear();
+					}
+					sb.pushBackOp(it);
+					break;
+				case ' ', '\t':
+					debug(1025) writeln(__FILE__,":",__LINE__, "blank or tab
+						 emit token");
+					this.emitToken(sb);
+					sb.clear();	
+					break;
+				default:
+					this.raiseLexError(this.sourceFile.getCurrentIdx(), it, curLine,
+						this.sourceFile, Error.UNKNOWN_INPUT_CHARACTER);
+			}
 		}	
 	}
 

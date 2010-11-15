@@ -103,6 +103,14 @@ public template StringBuffer(T) {
 			return this.bufferPointer;
 		}
 
+		public T getLastChar() const {
+			return this.buffer[this.bufferPointer-1];
+		}
+
+		public void removeLast() {
+			this.bufferPointer--;
+		}
+
 		public immutable(T)[] getString() const {
 			return this.buffer[0 .. this.bufferPointer].idup;
 		}
