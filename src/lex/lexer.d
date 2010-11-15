@@ -128,7 +128,7 @@ public class Lexer {
 						while(this.sourceFile.hasNextChar()) {
 							tmp = this.sourceFile.getNextChar();
 							if(tmp == '/' && sb.getSize() > 0 
-								&& sb.getLastChar() == '*') {
+								&& sb.getLastChar() == '+') {
 								sb.clear();
 								break;
 							}
