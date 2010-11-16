@@ -18,23 +18,23 @@ void sort(T)(T[] a, bool function(in T a, in T b) cmp, uint leftb = 0,
 	debug assert(leftb <= rightb, "left index to big");
 
 	//swap function
-	void swap(in int m, in int n) {
-		T tmp = a[m];
-		a[m] = a[n];
-		a[n] = tmp;
+	void swap(ref T m, ref T n) {
+		T tmp = m;
+		m = n;
+		n = tmp;
 	}
 
 	//partition function
 	int partition(uint left, uint right) {
 		uint idx = (left+right+1)/2;
 		const T pivot = a[idx];
-		swap(idx, right);
+		swap(a[idx], a[right]);
 		for(uint i = idx = left; i < right; i++) {
 			if(cmp(a[i], pivot)) {
-				swap(idx++, i);
+				swap(a[idx++], a[i]);
 			}
 		}
-		swap(idx, right);
+		swap(a[idx], a[right]);
 		return idx;
 	}
 
