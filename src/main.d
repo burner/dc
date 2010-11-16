@@ -11,7 +11,7 @@ import lex.lexer;
 import pars.parser;
 import util.stacktrace;
 
-void main() {
+int main(string[] args) {
 	debug scope StackTrace st = new StackTrace(__FILE__, __LINE__, "main");
 	//writefln("BuildID = %u", compilerinfo.CompilerID);
 	//writefln("Git version = %s", compilerinfo.GitHash);
@@ -40,5 +40,6 @@ void main() {
 	p.start();
 	p.stop();
 	p.join();
-	//StackTrace.printStats();
+	StackTrace.printStats();
+	return 0;
 }

@@ -5,7 +5,8 @@ OBJDIR="objs"
 
 all:${TARGET}
 
-OBJS=algo.o dlst.o lexer.o parser.o stringbuffer.o token.o stacktrace.o source.o token.o
+OBJS=algo.o dlst.o lexer.o options.o parser.o stringbuffer.o token.o \
+	stacktrace.o source.o token.o
 
 $(TARGET): $(OBJS) Makefile src/main.d
 	sh IncreBuildId.sh
@@ -31,6 +32,9 @@ dlst.o: Makefile src/container/dlst.d
 
 lexer.o: Makefile src/lex/lexer.d
 	$(DC) $(CFLAGS) src/lex/lexer.d 
+
+options.o: Makefile src/util/options.d
+	$(DC) $(CFLAGS) src/util/options.d 
 
 parser.o: Makefile src/pars/parser.d
 	$(DC) $(CFLAGS) src/pars/parser.d 
