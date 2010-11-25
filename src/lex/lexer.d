@@ -4,6 +4,7 @@ import std.stdio;
 import std.conv;
 import std.string;
 
+import compilerinfo;
 import lex.source;
 import lex.token;
 import pars.parser;
@@ -193,8 +194,33 @@ public class Lexer {
 						break;
 				}
 			} else {
-				this.parser.syncPush(new Token(TokenType.Identifier,
-					to!(dstring)(sbCntnt)));
+				switch(sbCntnt) {
+					case "__DATA__":
+						this.parser.syncPush(new Token(TokenType.Identifier,
+							to!(dstring)(sbCntnt)));
+						break;
+					case "__TIME__":
+						this.parser.syncPush(new Token(TokenType.Identifier,
+							to!(dstring)(sbCntnt)));
+						break;
+					case "__TIMESTAMP__":
+						this.parser.syncPush(new Token(TokenType.Identifier,
+							to!(dstring)(sbCntnt)));
+						break;
+					case "__VENDOR__":
+						this.parser.syncPush(new Token(TokenType.Identifier,
+							"dc"d));
+						break;
+					case "__VERSION__":
+						this.parser.syncPush(new Token(TokenType.Identifier,
+							compilerinfo.GitHash ~ 
+							to!(dstring)(compilerinfo.CompilerID)));
+						break;
+					default:	
+						this.parser.syncPush(new Token(TokenType.Identifier,
+							to!(dstring)(sbCntnt)));
+						break;
+				}
 			}
 		// operator keyword
 		} else if(sb.holdsOperator()) {
