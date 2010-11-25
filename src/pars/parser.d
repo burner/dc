@@ -56,14 +56,9 @@ public class Parser : Thread {
 
 		this.listModMutex.lock();
 		debug {
-			if(toPush.getType() != TokenType.Identifier) {
-				writeln("pushed new Token ", 
-					tokenTypeToString(toPush.getType()));
-			} else {
-				writeln("pushed new Token ", 
-					tokenTypeToString(toPush.getType())," ",
-					 toPush.getValue());
-			}
+			writeln("pushed new Token ", 
+				tokenTypeToString(toPush.getType())," ",
+				toPush.getValue());
 		}
 				
 		this.buffer.pushBack(toPush);

@@ -41,10 +41,13 @@ public class Source : Printable {
 		}
 		out {
 			this.curIdx++;
-			if(this.curIdx == this.file[this.curLine].length) {
-				this.curLine++;
-				this.curIdx = 0;
-			}
+			do {
+				if(this.curIdx == this.file[this.curLine].length) {
+					this.curLine++;
+					this.curIdx = 0;
+				}
+			} while(this.curLine < this.file.length &&
+				this.file[this.curLine].length == 0);
 		}
 		body {
 			if(this.curLine < this.file.length 
@@ -79,7 +82,7 @@ public class Source : Printable {
 		return this.file.length;
 	}
 
-	public uint currentLineNumber() {
+	public uint currentLineNumber() const {
 		debug scope StackTrace st = new StackTrace(__FILE__, __LINE__,
 			"currentLineNumber");
 		return this.curLine;

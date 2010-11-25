@@ -138,8 +138,8 @@ static this() {
 		keywordToTokenType["wchar"] = Wchar;
 		keywordToTokenType["while"] = While;
 		keywordToTokenType["with"] = With;
-		keywordToTokenType["__FILE__"] = __File__;
-		keywordToTokenType["__LINE__"] = __Line__;
+		keywordToTokenType["__FILE__"] = File;
+		keywordToTokenType["__LINE__"] = Line;
 		keywordToTokenType["__gshared"] = __Gshared;
 		keywordToTokenType["__thread"] = __Thread;
 		keywordToTokenType["__traits"] = __Traits;
@@ -238,7 +238,7 @@ public enum TokenType {
 	Ubyte, Ucent, Uint, Ulong, Union, Unittest, Ushort,
 	Version, Void, Volatile,
 	Wchar, While, With,
-	__File__, __Line__, __Gshared, __Thread, __Traits,
+	File, Line, __Gshared, __Thread, __Traits,
 	atProperty, atSafe, atTrusted, atSystem, atDisable,
 	
 	/// Symbols.
@@ -533,11 +533,11 @@ string tokenTypeToString(TokenType ty) {
 		case TokenType.While:
 			return "While";
 		case TokenType.With:
-			return "__With";
-		case TokenType.__File__:
-			return "__File";
-		case TokenType.__Line__:
-			return "__Line";
+			return "With";
+		case TokenType.File:
+			return "__File__";
+		case TokenType.Line:
+			return "__Line__";
 		case TokenType.__Gshared:
 			return "__Gshared";
 		case TokenType.__Thread:

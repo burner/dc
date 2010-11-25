@@ -175,7 +175,23 @@ public class Lexer {
 			TokenType lexed;
 			if(sbCntnt in keywordToTokenType) {
 				lexed = keywordToTokenType[sbCntnt];
-				this.parser.syncPush(new Token(lexed));
+				switch(lexed) {
+					case TokenType.File:
+						this.parser.syncPush(new Token(lexed,
+							to!(dstring)(this.sourceFile.getFileName())));
+						break;
+					case TokenType.Line:
+						/* the plus one is needed because currentLineNumber
+						 * returns the index within the line array stored in
+						 * file. this array starts with 0. */
+						this.parser.syncPush(new Token(lexed,
+							to!(dstring)
+								(this.sourceFile.currentLineNumber()+1)));
+						break;
+					default:
+						this.parser.syncPush(new Token(lexed));
+						break;
+				}
 			} else {
 				this.parser.syncPush(new Token(TokenType.Identifier,
 					to!(dstring)(sbCntnt)));
@@ -214,6 +230,8 @@ public class Lexer {
 				return new Token(TokenType.OpenParen);
 			case ')':
 				return new Token(TokenType.CloseParen);
+			case ',':
+				return new Token(TokenType.Comma);
 			case ';':
 				return new Token(TokenType.Semicolon);
 			case ':':
@@ -223,6 +241,7 @@ public class Lexer {
 			case '$':
 				return new Token(TokenType.Dollar);
 			default:
+				st.printTrace();
 				assert(0, "Invalid case : " ~ punc);	
 		}
 	}

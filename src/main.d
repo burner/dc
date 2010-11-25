@@ -29,8 +29,10 @@ int main(string[] args) {
 		"return foo;",
 		"}",
 		"",
+		"",
 		"void printer(T)(T t) {",
-		"	writeln(t);",
+		"	writeln(__FILE__, t);",
+		"	writeln(__LINE__, t);",
 		"}"];
 	
 	Source tsf = new Source("tst.d", ts);
@@ -40,6 +42,6 @@ int main(string[] args) {
 	p.start();
 	p.stop();
 	p.join();
-	StackTrace.printStats();
+	//StackTrace.printStats();
 	return 0;
 }

@@ -89,6 +89,9 @@ public final class StackTrace {
 			} else if(_arguments[i] == typeid(int)) {
 				tmp ~= to!(string)(va_arg!(int)(_argptr));
 				tmp ~= " ";
+			} else if(_arguments[i] == typeid(char)) {
+				tmp ~= to!(string)(va_arg!(char)(_argptr));
+				tmp ~= " ";
 			} else if(_arguments[i] == typeid(double)) {
 				tmp ~= to!(string)(va_arg!(double)(_argptr));
 				tmp ~= " ";
