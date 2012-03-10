@@ -1,8 +1,1 @@
-dc
-
-dc aims to be a multithread D2 compiler written in D2.
-
-First goal is to write a Lexer for D2. 
-
-Every of the six compiler steps will be divided in corresponding directories 
-and files.
+dc is DEAD long life dmcd
